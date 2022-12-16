@@ -65,6 +65,8 @@
                 />
               </div>
               <div class="flex flex-row flex-wrap gap-5 mt-8 mb-2">
+                <label for="booked">Booked?</label>
+                <input type="checkbox" id="booked" v-model="booked" />
               </div>
               <button
                 type="submit"
@@ -83,7 +85,6 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, toRefs } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import ImageCard from "../components/ImageCard.vue";
 import { useApiWithAuth } from "../modules/api";
 import { useAuth } from "../modules/auth";
 
