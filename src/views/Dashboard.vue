@@ -40,72 +40,31 @@
             :id="availability.owner.id"
             :firstName="availability.owner.firstName"
             :lastName="availability.owner.lastName"
-            :name="availability.name"
-            :theme="availability.theme"
             :description="availability.description"
           />
         </div>
       </div>
-      <div class="flex mt-4">
-        <button
-          class="border border-red-500 text-red-500 block rounded-sm font-bold py-4 px-6 mr-2 flex items-center"
-          @click="handleOnPreviousPageClick"
-          :disabled="shouldDisablePreviousButton"
-          :class="{
-            'bg-red-500 hover:bg-red-400 hover:text-white text-white ':
-              !shouldDisablePreviousButton,
-          }"
-        >
-          <svg
-            class="h-5 w-5 mr-2 fill-current"
-            version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px"
-            y="0px"
-            viewBox="-49 141 512 512"
-            style="enable-background: new -49 141 512 512"
-            xml:space="preserve"
-          >
-            <path
-              id="XMLID_10_"
-              d="M438,372H36.355l72.822-72.822c9.763-9.763,9.763-25.592,0-35.355c-9.763-9.764-25.593-9.762-35.355,0 l-115.5,115.5C-46.366,384.01-49,390.369-49,397s2.634,12.989,7.322,17.678l115.5,115.5c9.763,9.762,25.593,9.763,35.355,0 c9.763-9.763,9.763-25.592,0-35.355L36.355,422H438c13.808,0,25-11.193,25-25S451.808,372,438,372z"
-            ></path>
-          </svg>
-          Previous page
-        </button>
-        <button
-          class="border border-red-500 text-red-500 block rounded-sm font-bold py-4 px-6 ml-2 flex items-center"
-          @click="handleOnNextPageClick"
-          :disabled="shouldDisableNextButton"
-          :class="{
-            'bg-red-500 hover:bg-red-400 hover:text-white text-white':
-              !shouldDisableNextButton,
-          }"
-        >
-          Next page
-          <svg
-            class="h-5 w-5 ml-2 fill-current"
-            clasversion="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px"
-            y="0px"
-            viewBox="-49 141 512 512"
-            style="enable-background: new -49 141 512 512"
-            xml:space="preserve"
-          >
-            <path
-              id="XMLID_11_"
-              d="M-24,422h401.645l-72.822,72.822c-9.763,9.763-9.763,25.592,0,35.355c9.763,9.764,25.593,9.762,35.355,0
-            l115.5-115.5C460.366,409.989,463,403.63,463,397s-2.634-12.989-7.322-17.678l-115.5-115.5c-9.763-9.762-25.593-9.763-35.355,0
-            c-9.763,9.763-9.763,25.592,0,35.355l72.822,72.822H-24c-13.808,0-25,11.193-25,25S-37.808,422-24,422z"
-            />
-          </svg>
-        </button>
-      </div>
+      <div class="month">
+  <ul>
+    <li class="prev">&#10094;</li>
+    <li class="next">&#10095;</li>
+    <li class ="">{{month[date.getMonth()]}}<br><span style="font-size:18px">{{date.getFullYear()}}</span></li>
+  </ul>
+</div>
+
+<ul class="weekdays">
+  <li>Mo</li>
+  <li>Tu</li>
+  <li>We</li>
+  <li>Th</li>
+  <li>Fr</li>
+
+</ul>
+
+<ul class="days">
+  <li v-for="index in 31" :key="index">{{index}}</li>
+
+</ul>
     </div>
   </section>
 </template>
@@ -134,7 +93,8 @@ export default defineComponent({
       currentPage: 1,
       currentAvailabilities: [],
     });
-
+    const date = new Date();
+    const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     const fetchData = (): void => {
       const { get, data } = useApiWithAuth(
         `/api/availability?pageSize=${constants.PAGE_SIZE.toString()}&page=${
@@ -177,6 +137,8 @@ export default defineComponent({
 
     return {
       user,
+      month,
+      date,
       handleOnNextPageClick,
       handleOnPreviousPageClick,
       availabilities,
@@ -190,3 +152,77 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+
+
+/* Month header */
+.month {
+  padding: 70px 25px;
+  width: 100%;
+  background: #16a34a;
+  text-align: center;
+}
+
+/* Month list */
+.month ul {
+  margin: 0;
+  padding: 0;
+}
+
+.month ul li {
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* Previous button inside month header */
+.month .prev {
+  float: left;
+  padding-top: 10px;
+}
+
+/* Next button */
+.month .next {
+  float: right;
+  padding-top: 10px;
+}
+
+/* Weekdays (Mon-Sun) */
+.weekdays {
+  margin: 0;
+  padding: 10px 0;
+  background-color:#ddd;
+}
+
+.weekdays li {
+  display: inline-block;
+  width: 20%;
+  color: #666;
+  text-align: center;
+}
+
+/* Days (1-31) */
+.days {
+  padding: 10px 0;
+  background: #eee;
+  margin: 0;
+}
+
+.days li {
+  list-style-type: none;
+  display: inline-block;
+  width: 20%;
+  height: 20%;
+  text-align: center;
+  margin-bottom: 5px;
+  font-size:12px;
+  color: #777;
+}
+
+/* Highlight the "current" day */
+.days li .active {
+  padding: 5px;
+  background: #1abc9c;
+  color: white !important
+}</style>
