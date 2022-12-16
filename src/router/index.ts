@@ -68,6 +68,12 @@ const routes: Array<RouteRecordRaw> = [
     component: Success,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/search",
+    name: "search",
+    component: Search,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
