@@ -37,12 +37,14 @@
           :key="availability.owner.id"
         >
           <AvailabilityCard
-            :id="availability.owner.id"
+            :id="availability._id"
             :firstName="availability.owner.firstName"
             :lastName="availability.owner.lastName"
-            :name="availability.name"
-            :theme="availability.theme"
+            :jobRole="availability.jobRole"
             :description="availability.description"
+            :timeFrom="availability.timeFrom"
+            :timeUntil="availability.timeUntil"
+            :booked="availability.booked"
           />
         </div>
       </div>
@@ -137,7 +139,7 @@ export default defineComponent({
 
     const fetchData = (): void => {
       const { get, data } = useApiWithAuth(
-        `/api/availability?pageSize=${constants.PAGE_SIZE.toString()}&page=${
+        `/api/availabilities?pageSize=${constants.PAGE_SIZE.toString()}&page=${
           dashboardState.currentPage
         }`
       );

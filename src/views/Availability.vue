@@ -19,11 +19,6 @@
       <div class="flex flex-wrap -m-4" v-if="data">
         <div class="xl:w-1/3 md:w-1/2 p-4">
           <div class="bg-white p-6 rounded-lg">
-            <img
-              class="lg:h-60 xl:h-56 md:h-64 sm:h-72 xs:h-72 h-72 rounded object-center mb-6"
-              :src="require(`@/assets/${data.theme}.png`)"
-              alt="Availability"
-            />
             <h3
               class="tracking-widest text-red-500 text-xs font-medium title-font"
             >

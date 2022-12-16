@@ -1,21 +1,19 @@
 <template>
   <router-link :to="'/availabilities/' + id">
-    <div class="bg-white p-6 rounded-lg">
-      <img
-        class="lg:h-60 xl:h-56 md:h-64 sm:h-72 xs:h-72 h-72 rounded object-center mb-6"
-        :src="require(`@/assets/${theme}.png`)"
-        alt="Availability"
-      />
+    <div class="bg-gray-200 p-6 rounded-lg">
       <h3
         class="tracking-widest text-red-500 text-xs font-medium title-font"
       >
         {{ `${firstName} ${lastName}` }}
       </h3>
       <h2 class="text-lg text-gray-900 font-medium title-font mb-4">
-        {{ name }}
+        {{ jobRole }}
       </h2>
-      <p class="leading-relaxed text-base">
+      <p class="leading-relaxed text-base mb-2">
         {{ description }}
+      </p>
+      <p class="leading-relaxed text-base">
+        {{ new Date(timeFrom).toLocaleString() }} - {{ new Date(timeUntil).toLocaleString() }}
       </p>
     </div>
   </router-link>
@@ -38,7 +36,7 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    name: {
+    jobRole: {
       type: String,
       required: true,
     },
@@ -46,8 +44,16 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    theme: {
-      type: String,
+    timeFrom: {
+      type: Date,
+      required: true,
+    },
+    timeUntil: {
+      type: Date,
+      required: true,
+    },
+    booked: {
+      type: Boolean,
       required: true,
     },
   },

@@ -1,4 +1,5 @@
 export interface Availability {
+  _id: String;
   jobRole: string;
   description: string;
   timeFrom: Date;

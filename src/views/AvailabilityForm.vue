@@ -25,7 +25,7 @@
                   name="name"
                   id="name"
                   placeholder="Job Role"
-                  v-model="name"
+                  v-model="jobRole"
                   class="w-100 mt-2 py-3 px-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-700 text-gray-800 font-semibold focus:border-red-500 focus:outline-none"
                 />
               </div>
@@ -38,7 +38,7 @@
                   id="description"
                   v-model="description"
                   placeholder="Description"
-                  class="w-100 mt-2 py-3 px-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-700 text-gray-800 font-semibold focus:border-red-500 focus:outline-none"
+                  class="w-100 h-[32rem!important] mt-2 py-3 px-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-700 text-gray-800 font-semibold focus:border-red-500 focus:outline-none"
                 />
               </div>
 
@@ -48,9 +48,7 @@
                   type="datetime-local"
                   name="timeFrom"
                   id="timeFrom"
-                  :value="`${new Date()
-                    .toISOString()
-                    .substring(0, new Date().toISOString().length - 8)}`"
+                  v-model="timeFrom"
                   class="w-100 mt-2 py-3 px-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-700 text-gray-800 font-semibold focus:border-red-500 focus:outline-none"
                 />
               </div>
@@ -61,21 +59,12 @@
                   type="datetime-local"
                   name="timeFrom"
                   id="timeUntil"
-                  :value="`${new Date()
-                    .toISOString()
-                    .substring(0, new Date().toISOString().length - 8)}`"
+                  v-model="timeUntil"
                   step="600"
                   class="w-100 mt-2 py-3 px-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-700 text-gray-800 font-semibold focus:border-red-500 focus:outline-none"
                 />
               </div>
               <div class="flex flex-row flex-wrap gap-5 mt-8 mb-2">
-                <ImageCard
-                  v-for="(theme, index) in themes"
-                  :key="index"
-                  :name="theme"
-                  :onClick="selecTheme"
-                  :isSelected="theme === selectedTheme"
-                />
               </div>
               <button
                 type="submit"
@@ -99,13 +88,13 @@ import { useApiWithAuth } from "../modules/api";
 import { useAuth } from "../modules/auth";
 
 interface CreateAvailabilityPayload {
-  name?: string;
+  jobRole?: string;
   description?: string;
-  theme?: string;
+  timeFrom?: Date;
+  timeUntil?: Date;
 }
 
 export default defineComponent({
-  components: { ImageCard },
   props: ["id"],
   setup(props) {
     // loadUser();
@@ -116,12 +105,11 @@ export default defineComponent({
     const router = useRouter();
 
     const payload = reactive<CreateAvailabilityPayload>({
-      name: undefined,
+      jobRole: undefined,
       description: undefined,
-      theme: "Engineering",
+      timeFrom: undefined,
+      timeUntil: undefined,
     });
-
-    const themes: string[] = ["Engineering", "Writing", "Reading"];
 
     const route = useRoute();
     const path = computed(() => route.path);
@@ -130,9 +118,10 @@ export default defineComponent({
     if (isEditMode) {
       const { get } = useApiWithAuth(`/api/availabilities/${props.id}`);
       get().then((res) => {
-        payload.name = res.name;
+        payload.jobRole = res.jobRole;
         payload.description = res.description;
-        payload.theme = res.theme;
+        payload.timeFrom = res.timeFrom;
+        payload.timeUntil = res.timeUntil;
       });
     }
 
@@ -142,16 +131,13 @@ export default defineComponent({
           router.push({ name: "dashboard" });
         });
       } else {
+        console.log(payload)
         post(payload).then(() => {
           router.push({ name: "dashboard" });
         });
       }
     };
-    const selecTheme = (theme: string) => {
-      payload.theme = theme;
-    };
 
-    const selectedTheme = computed(() => payload.theme);
     const pageHeader = isEditMode ? "Edit Availability" : "Add Availability";
 
     return {
@@ -159,9 +145,6 @@ export default defineComponent({
       data,
       loading,
       submit,
-      themes,
-      selecTheme,
-      selectedTheme,
       isEditMode,
       pageHeader,
       ...toRefs(payload),
